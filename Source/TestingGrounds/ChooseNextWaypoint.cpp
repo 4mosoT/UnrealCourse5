@@ -8,5 +8,8 @@ EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent & Ow
 {
 	Super::ExecuteTask(OwnerComp, NodeMemory);
 	UBlackboardComponent* BlackBoardComp = OwnerComp.GetBlackboardComponent();
+	int32 Index = BlackBoardComp->GetValueAsInt(IndexKey.SelectedKeyName);
+	UE_LOG(LogTemp, Warning, TEXT("Waypoint index: %i"), Index)
 	return EBTNodeResult::Succeeded;
+
 }
