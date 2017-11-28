@@ -13,6 +13,9 @@ UCLASS()
 class TESTINGGROUNDS_API APatrollingGuard : public ATP_ThirdPersonCharacter
 {
 	GENERATED_BODY()
+
+public:
+	TArray<AActor*> GetPatrolPoints();
 	
 private:
 	UPROPERTY(EditAnywhere, Category = "Patrol Route")
