@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "PatrollingComponent.h"
 
+
 EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
 	Super::ExecuteTask(OwnerComp, NodeMemory);
