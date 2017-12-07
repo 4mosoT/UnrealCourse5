@@ -10,7 +10,7 @@ EBTNodeResult::Type UFocustAtPoint::ExecuteTask(UBehaviorTreeComponent & OwnerCo
 {
 	Super::ExecuteTask(OwnerComp, NodeMemory);
 	UBlackboardComponent* BlackBoardComp = OwnerComp.GetBlackboardComponent();
-	//BlackBoardComp->SetValueAsObject(FocusKey.SelectedKeyName, GetWorld()->GetFirstPlayerController()->GetPawn());
+	
 	if (FocusKey.IsSet())
 	{
 		OwnerComp.GetAIOwner()->SetFocus(Cast<AActor>(BlackBoardComp->GetValueAsObject(FocusKey.SelectedKeyName)));
