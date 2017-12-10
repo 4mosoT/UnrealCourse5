@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Gun.generated.h"
 
+class UInputComponent;
+
 UCLASS()
 class TESTINGGROUNDS_API AGun : public AActor
 {
@@ -43,7 +45,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		class UAnimInstance* AnimInstance;
-protected:
 
 	/** Fires a projectile. */
 	void OnFire();
