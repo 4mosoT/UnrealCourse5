@@ -31,8 +31,8 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn, int32 MaxSp
 void ATile::BeginPlay()
 {
 	Super::BeginPlay();
-	if(CastSphere(GetActorLocation(), 300))	DrawDebugSphere(GetWorld(), GetActorLocation(), 300, 32, FColor::Red, true, 1000); 
-	else DrawDebugSphere(GetWorld(), GetActorLocation(), 300, 32, FColor::Green, true, 1000);
+	if(CastSphere(GetActorLocation(), 300))	DrawDebugSphere(GetWorld(), GetActorLocation(), 300, 8, FColor::Red, true, 1000); 
+	else DrawDebugSphere(GetWorld(), GetActorLocation(), 300, 8, FColor::Green, true, 1000);
 
 }
 
@@ -51,7 +51,7 @@ bool ATile::CastSphere(FVector Location, float Radius)
 		Location,
 		Location,
 		FQuat::Identity,
-		ECollisionChannel::ECC_Camera,
+		ECollisionChannel::ECC_GameTraceChannel2,
 		FCollisionShape::MakeSphere(Radius)
 	);
 
