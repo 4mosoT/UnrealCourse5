@@ -56,7 +56,7 @@ void AFirstPersonCharacter::BeginPlay()
 	if (GunBlueprint == NULL) return;
 	FP_Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint")); //Attach gun mesh component to Skeleton, doing it here because the skelton is not yet created in the constructor
-	FP_Gun->AnimInstance = Mesh1P->GetAnimInstance();
+	//FP_Gun->AnimInstance = Mesh1P->GetAnimInstance();
 	if (EnableTouchscreenMovement(InputComponent) == false)
 	{
 		InputComponent->BindAction("Fire", IE_Pressed, FP_Gun, &AGun::OnFire);
