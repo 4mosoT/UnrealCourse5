@@ -13,17 +13,25 @@ ATile::ATile()
 
 }
 
-void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn, int32 MaxSpawn)
+void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn = 1, int32 MaxSpawn = 1, float Radius)
 {
 	FVector Min(0, -2000, 0);
 	FVector Max(4000, 2000, 0);
 	int32 SpawnNumber = FMath::RandRange(MinSpawn, MaxSpawn);
+	FVector SpawnPoint;
 	for (size_t i =0 ; i < SpawnNumber; i++)
 	{
-		FVector SpawnPoint = FMath::RandPointInBox(FBox(Min, Max));
-		AActor* Spawned = GetWorld()->SpawnActor<AActor>(ToSpawn);
-		Spawned->SetActorRelativeLocation(SpawnPoint);
-		Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+		for (size_t t = 0; t < 20; t++)
+		{
+			SpawnPoint = FMath::RandPointInBox(FBox(Min, Max));
+			if (CanSpawnAtLocation(SpawnPoint, Radius)) {
+				AActor* Spawned = GetWorld()->SpawnActor<AActor>(ToSpawn);
+				Spawned->SetActorRelativeLocation(SpawnPoint);
+				Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+				break;
+			}
+		}
+
 	}
 }
 
@@ -31,8 +39,7 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn, int32 MaxSp
 void ATile::BeginPlay()
 {
 	Super::BeginPlay();
-	if(CastSphere(GetActorLocation(), 300))	DrawDebugSphere(GetWorld(), GetActorLocation(), 300, 8, FColor::Red, true, 1000); 
-	else DrawDebugSphere(GetWorld(), GetActorLocation(), 300, 8, FColor::Green, true, 1000);
+
 
 }
 
@@ -43,17 +50,23 @@ void ATile::Tick(float DeltaTime)
 
 }
 
-bool ATile::CastSphere(FVector Location, float Radius)
+bool ATile::CanSpawnAtLocation(FVector Location, float Radius)
 {
 	FHitResult HitResult;
-	return GetWorld()->SweepSingleByChannel(
+	FVector GlobalLocation = ActorToWorld().TransformPosition(Location);
+	bool Result =  GetWorld()->SweepSingleByChannel(
 		HitResult,
-		Location,
-		Location,
+		GlobalLocation,
+		GlobalLocation,
 		FQuat::Identity,
 		ECollisionChannel::ECC_GameTraceChannel2,
 		FCollisionShape::MakeSphere(Radius)
 	);
+	
+	FColor Color = Result ? FColor::Red : FColor::Green;
+	DrawDebugSphere(GetWorld(), GlobalLocation, Radius, 8, Color, true, 1000);
+
+	return !Result;
 
 }
 
