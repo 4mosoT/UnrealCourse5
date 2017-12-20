@@ -2,7 +2,6 @@
 
 #include "Tile.h"
 #include "Engine/World.h"
-#include "DrawDebugHelpers.h"
 
 
 // Sets default values
@@ -13,7 +12,7 @@ ATile::ATile()
 
 }
 
-void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn = 1, int32 MaxSpawn = 1, float Radius)
+void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn , int32 MaxSpawn, float Radius, float MinScale, float MaxScale)
 {
 	FVector Min(0, -2000, 0);
 	FVector Max(4000, 2000, 0);
@@ -24,9 +23,12 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn = 1, int32 M
 		for (size_t t = 0; t < 20; t++)
 		{
 			SpawnPoint = FMath::RandPointInBox(FBox(Min, Max));
-			if (CanSpawnAtLocation(SpawnPoint, Radius)) {
+			float Scale = FMath::RandRange(MinScale, MaxScale);
+			if (CanSpawnAtLocation(SpawnPoint, Radius * Scale)) {
 				AActor* Spawned = GetWorld()->SpawnActor<AActor>(ToSpawn);
 				Spawned->SetActorRelativeLocation(SpawnPoint);
+				Spawned->SetActorRotation(FRotator(0, FMath::RandRange(-180.f, 180.f), 0));
+				Spawned->SetActorScale3D(FVector(Scale));
 				Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
 				break;
 			}
@@ -63,9 +65,6 @@ bool ATile::CanSpawnAtLocation(FVector Location, float Radius)
 		FCollisionShape::MakeSphere(Radius)
 	);
 	
-	FColor Color = Result ? FColor::Red : FColor::Green;
-	DrawDebugSphere(GetWorld(), GlobalLocation, Radius, 8, Color, true, 1000);
-
 	return !Result;
 
 }
