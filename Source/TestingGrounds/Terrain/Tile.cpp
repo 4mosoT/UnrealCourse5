@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Tile.h"
+#include "Engine/World.h"
 
 
 // Sets default values
@@ -11,14 +12,17 @@ ATile::ATile()
 
 }
 
-void ATile::PlaceActors()
+void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn, int32 MaxSpawn)
 {
 	FVector Min(0, -2000, 0);
 	FVector Max(4000, 2000, 0);
-	for (size_t i = 0; i < 20; i++)
+	int32 SpawnNumber = FMath::RandRange(MinSpawn, MaxSpawn);
+	for (size_t i =0 ; i < SpawnNumber; i++)
 	{
 		FVector SpawnPoint = FMath::RandPointInBox(FBox(Min, Max));
-
+		AActor* Spawned = GetWorld()->SpawnActor<AActor>(ToSpawn);
+		Spawned->SetActorRelativeLocation(SpawnPoint);
+		Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
 	}
 }
 
