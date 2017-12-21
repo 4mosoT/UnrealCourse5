@@ -2,6 +2,8 @@
 
 #include "Tile.h"
 #include "Engine/World.h"
+#include "Components/HierarchicalInstancedStaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
 
 
 // Sets default values
@@ -9,7 +11,7 @@ ATile::ATile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 }
 
 void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn , int32 MaxSpawn, float Radius, float MinScale, float MaxScale)
@@ -36,6 +38,8 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn , int32 MaxS
 
 	}
 }
+
+
 
 // Called when the game starts or when spawned
 void ATile::BeginPlay()
