@@ -6,6 +6,16 @@
 #include "GameFramework/Actor.h"
 #include "Tile.generated.h"
 
+USTRUCT()
+struct FSpawnPosition
+{
+	GENERATED_USTRUCT_BODY()
+	FVector Location;
+	float Rotation;
+	float Scale;
+
+};
+
 class UActorPool;
 
 UCLASS()
@@ -48,4 +58,6 @@ private:
 	UActorPool* NavMeshBoundsVolumePool;
 
 	AActor* NavMeshBoundsVolume = nullptr;
+
+	TArray<FSpawnPosition> GeneratePositionsArray(int32 MinScale, int32 MaxScale, int32 NumberOfPositions);
 };

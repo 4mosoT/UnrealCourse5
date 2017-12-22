@@ -23,24 +23,21 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn , int32 MaxS
 {
 
 	int32 SpawnNumber = FMath::RandRange(MinSpawn, MaxSpawn);
-	FVector SpawnPoint;
-	for (size_t i =0 ; i < SpawnNumber; i++)
-	{
-		for (size_t t = 0; t < 20; t++)
-		{
-			SpawnPoint = FMath::RandPointInBox(FBox(MinExtend, MaxExtend));
-			float Scale = FMath::RandRange(MinScale, MaxScale);
-			if (CanSpawnAtLocation(SpawnPoint, Radius * Scale)) {
-				AActor* Spawned = GetWorld()->SpawnActor<AActor>(ToSpawn);
-				Spawned->SetActorRelativeLocation(SpawnPoint);
-				Spawned->SetActorRotation(FRotator(0, FMath::RandRange(-180.f, 180.f), 0));
-				Spawned->SetActorScale3D(FVector(Scale));
-				Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
-				break;
-			}
+	int32 count = 0;
+	for (FSpawnPosition SpawnPosition : GeneratePositionsArray(MinScale, MaxScale, SpawnNumber * 10)) {
+		if (CanSpawnAtLocation(SpawnPosition.Location, Radius * SpawnPosition.Scale)) {
+			AActor* Spawned = GetWorld()->SpawnActor<AActor>(ToSpawn);
+			Spawned->SetActorRelativeLocation(SpawnPosition.Location);
+			Spawned->SetActorRotation(FRotator(0, SpawnPosition.Rotation,0 ));
+			Spawned->SetActorScale3D(FVector(SpawnPosition.Scale));
+			Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+			count++;
 		}
+		if (count >= SpawnNumber) break;
 
+		
 	}
+
 }
 
 
@@ -94,5 +91,20 @@ bool ATile::CanSpawnAtLocation(FVector Location, float Radius)
 	
 	return !Result;
 
+}
+
+TArray<FSpawnPosition> ATile::GeneratePositionsArray(int32 MinScale, int32 MaxScale, int32 NumberOfPositions)
+{
+	TArray<FSpawnPosition> PositionArray;
+	for (size_t i = 0; i < NumberOfPositions; i++)
+	{
+		FSpawnPosition SpawnPosition;
+		SpawnPosition.Location = FMath::RandPointInBox(FBox(MinExtend, MaxExtend));
+		SpawnPosition.Rotation = FMath::RandRange(-180.f, 180.f);
+		SpawnPosition.Scale = FMath::RandRange(MinScale, MaxScale);
+		PositionArray.Push(SpawnPosition);
+			
+	}
+	return PositionArray;
 }
 
