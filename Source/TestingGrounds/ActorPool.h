@@ -19,5 +19,8 @@ public:
 	AActor* Checkout();
 	void Add(AActor* ActorToReturn);
 
+private:
+	TArray<AActor*> ArrayPool;
+
 	
 };

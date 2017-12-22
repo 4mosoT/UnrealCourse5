@@ -15,10 +15,13 @@ UActorPool::UActorPool()
 
 AActor * UActorPool::Checkout()
 {
-	return nullptr;
+	if (ArrayPool.Num() == 0) return nullptr;
+	return ArrayPool.Pop();
 }
 
 void UActorPool::Add(AActor * ActorToReturn)
 {
+
+	ArrayPool.Push(ActorToReturn);
 
 }

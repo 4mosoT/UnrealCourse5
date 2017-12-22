@@ -4,6 +4,7 @@
 #include "Engine/World.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
+#include "ActorPool.h"
 
 
 // Sets default values
@@ -11,20 +12,21 @@ ATile::ATile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+	MinExtend = FVector(0, -2000, 0);
+	MaxExtend = FVector(4000, 2000, 0);
+
 }
 
 void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn , int32 MaxSpawn, float Radius, float MinScale, float MaxScale)
 {
-	FVector Min(0, -2000, 0);
-	FVector Max(4000, 2000, 0);
+
 	int32 SpawnNumber = FMath::RandRange(MinSpawn, MaxSpawn);
 	FVector SpawnPoint;
 	for (size_t i =0 ; i < SpawnNumber; i++)
 	{
 		for (size_t t = 0; t < 20; t++)
 		{
-			SpawnPoint = FMath::RandPointInBox(FBox(Min, Max));
+			SpawnPoint = FMath::RandPointInBox(FBox(MinExtend, MaxExtend));
 			float Scale = FMath::RandRange(MinScale, MaxScale);
 			if (CanSpawnAtLocation(SpawnPoint, Radius * Scale)) {
 				AActor* Spawned = GetWorld()->SpawnActor<AActor>(ToSpawn);
@@ -46,7 +48,12 @@ void ATile::BeginPlay()
 {
 	Super::BeginPlay();
 
+}
 
+void ATile::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	UE_LOG(LogTemp, Warning, TEXT("[%s] End Play"), *GetName())
+	NavMeshBoundsVolumePool->Add(NavMeshBoundsVolume);
 }
 
 // Called every frame
@@ -59,6 +66,15 @@ void ATile::Tick(float DeltaTime)
 void ATile::SetPool(UActorPool * NavMeshBoundsVolumePool)
 {
 	this->NavMeshBoundsVolumePool = NavMeshBoundsVolumePool;
+	
+	NavMeshBoundsVolume = NavMeshBoundsVolumePool->Checkout();
+	if (NavMeshBoundsVolume == nullptr) {
+		UE_LOG(LogTemp, Warning, TEXT("[s%] Not Enough Actors In Pool"), *GetName());
+		return;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("[%s] Checkout: [%s] "), *GetName(), *NavMeshBoundsVolume->GetName());
+
+	NavMeshBoundsVolume->SetActorLocation(GetActorLocation());
 }
 
 bool ATile::CanSpawnAtLocation(FVector Location, float Radius)
