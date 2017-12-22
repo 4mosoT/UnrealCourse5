@@ -5,6 +5,7 @@
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
 #include "ActorPool.h"
+#include "AI/Navigation/NavigationSystem.h"
 
 
 // Sets default values
@@ -14,6 +15,7 @@ ATile::ATile()
 	PrimaryActorTick.bCanEverTick = true;
 	MinExtend = FVector(0, -2000, 0);
 	MaxExtend = FVector(4000, 2000, 0);
+	NavigationBoundsOffset = FVector(2000, 0, 0);
 
 }
 
@@ -73,8 +75,8 @@ void ATile::SetPool(UActorPool * NavMeshBoundsVolumePool)
 		return;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("[%s] Checkout: [%s] "), *GetName(), *NavMeshBoundsVolume->GetName());
-
-	NavMeshBoundsVolume->SetActorLocation(GetActorLocation());
+	NavMeshBoundsVolume->SetActorLocation(GetActorLocation() + NavigationBoundsOffset);
+	GetWorld()->GetNavigationSystem()->Build();
 }
 
 bool ATile::CanSpawnAtLocation(FVector Location, float Radius)

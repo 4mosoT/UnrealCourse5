@@ -32,6 +32,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Spawning)
 		FVector MaxExtend;
 
+	UPROPERTY(EditDefaultsOnly, Category = Navigation)
+		FVector NavigationBoundsOffset;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
