@@ -56,6 +56,11 @@ void ATile::Tick(float DeltaTime)
 
 }
 
+void ATile::SetPool(UActorPool * NavMeshBoundsVolumePool)
+{
+	this->NavMeshBoundsVolumePool = NavMeshBoundsVolumePool;
+}
+
 bool ATile::CanSpawnAtLocation(FVector Location, float Radius)
 {
 	FHitResult HitResult;
