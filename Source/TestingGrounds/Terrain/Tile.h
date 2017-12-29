@@ -61,4 +61,7 @@ private:
 	AActor* NavMeshBoundsVolume = nullptr;
 
 	TArray<FSpawnPosition> GeneratePositionsArray(int32 MinScale, int32 MaxScale, int32 NumberOfPositions);
+
+	TArray<AActor*> ActorsList;
+
 };

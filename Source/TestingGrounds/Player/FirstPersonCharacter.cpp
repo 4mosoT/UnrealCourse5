@@ -22,7 +22,7 @@ AFirstPersonCharacter::AFirstPersonCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
-
+		
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
@@ -194,3 +194,12 @@ bool AFirstPersonCharacter::EnableTouchscreenMovement(class UInputComponent* Inp
 	}
 	return bResult;
 }
+
+void  AFirstPersonCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	UE_LOG(LogTemp, Warning, TEXT("Begin destroy"))
+	FP_Gun->Destroy();
+}
+
+

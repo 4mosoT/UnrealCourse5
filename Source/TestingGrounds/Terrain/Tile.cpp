@@ -27,6 +27,7 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn , int32 MaxS
 	for (FSpawnPosition SpawnPosition : GeneratePositionsArray(MinScale, MaxScale, SpawnNumber * 10)) {
 		if (CanSpawnAtLocation(SpawnPosition.Location, Radius * SpawnPosition.Scale)) {
 			AActor* Spawned = GetWorld()->SpawnActor<AActor>(ToSpawn);
+			ActorsList.Push(Spawned);
 			Spawned->SetActorRelativeLocation(SpawnPosition.Location);
 			Spawned->SetActorRotation(FRotator(0, SpawnPosition.Rotation,0 ));
 			Spawned->SetActorScale3D(FVector(SpawnPosition.Scale));
@@ -46,6 +47,7 @@ void ATile::PlaceAIPawns(TSubclassOf<APawn> ToSpawn, int32 MinSpawn, int32 MaxSp
 	for (FSpawnPosition SpawnPosition : GeneratePositionsArray(1, 1, SpawnNumber * 10)) {
 		if (CanSpawnAtLocation(SpawnPosition.Location, Radius * SpawnPosition.Scale)) {
 			APawn* Pawn = GetWorld()->SpawnActor<APawn>(ToSpawn);
+			ActorsList.Push(Pawn);
 			Pawn->SpawnDefaultController();
 			Pawn->Tags.Add(FName("Enemy"));
 			Pawn->SetActorRelativeLocation(SpawnPosition.Location);
@@ -69,8 +71,11 @@ void ATile::BeginPlay()
 
 void ATile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	UE_LOG(LogTemp, Warning, TEXT("[%s] End Play"), *GetName())
+	Super::EndPlay(EndPlayReason);
 	NavMeshBoundsVolumePool->Add(NavMeshBoundsVolume);
+	for (AActor* Actor : ActorsList) {
+		Actor->Destroy();
+	}
 }
 
 // Called every frame
