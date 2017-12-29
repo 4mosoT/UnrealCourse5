@@ -32,3 +32,8 @@ void AInfiniteTerrainGameMode::TileConquered()
 {
 	Score++;
 }
+
+int AInfiniteTerrainGameMode::GetScore()
+{
+	return Score;
+}

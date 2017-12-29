@@ -21,6 +21,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Scoring")
 	void TileConquered();
 
+	UFUNCTION(BlueprintCallable, Category = "Scoring")
+	int GetScore();
+
 private:
 	void AddToPool(ANavMeshBoundsVolume* NavMeshVolume);
 
