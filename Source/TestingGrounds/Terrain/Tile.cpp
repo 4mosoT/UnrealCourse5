@@ -33,9 +33,27 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn , int32 MaxS
 			Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
 			count++;
 		}
-		if (count >= SpawnNumber) break;
+		if (count >= SpawnNumber) break;		
+	}
 
-		
+}
+
+void ATile::PlaceAIPawns(TSubclassOf<APawn> ToSpawn, int32 MinSpawn, int32 MaxSpawn, float Radius)
+{
+	int32 SpawnNumber = FMath::RandRange(MinSpawn, MaxSpawn);
+	int32 count = 0;
+
+	for (FSpawnPosition SpawnPosition : GeneratePositionsArray(1, 1, SpawnNumber * 10)) {
+		if (CanSpawnAtLocation(SpawnPosition.Location, Radius * SpawnPosition.Scale)) {
+			APawn* Pawn = GetWorld()->SpawnActor<APawn>(ToSpawn);
+			Pawn->SpawnDefaultController();
+			Pawn->Tags.Add(FName("Enemy"));
+			Pawn->SetActorRelativeLocation(SpawnPosition.Location);
+			Pawn->SetActorRotation(FRotator(0, SpawnPosition.Rotation, 0));
+			Pawn->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+			count++;
+		}
+		if (count >= SpawnNumber) break;
 	}
 
 }
