@@ -18,11 +18,16 @@ class TESTINGGROUNDS_API AInfiniteTerrainGameMode : public ATestingGroundsGameMo
 public: 
 	AInfiniteTerrainGameMode();
 
+	UFUNCTION(BlueprintCallable, Category = "Scoring")
+	void TileConquered();
+
 private:
 	void AddToPool(ANavMeshBoundsVolume* NavMeshVolume);
 
 	UFUNCTION(BlueprintCallable, Category = "Bounds Pool")
 	void PopulateBoundsVolumePool();
+
+	int Score = 0;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pool")
